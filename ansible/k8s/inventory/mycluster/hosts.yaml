@@ -1,7 +1,11 @@
 all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_private_key_file: /work/.ssh/id_rsa
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
   hosts:
     node1:
-      ansible_host: 192.168.1.11
+      ansible_host: 129.114.26.190
       ansible_user: cc
       ip: 192.168.1.11
       access_ip: 192.168.1.11
@@ -10,11 +14,13 @@ all:
       ansible_user: cc
       ip: 192.168.1.12
       access_ip: 192.168.1.12
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyJump=cc@129.114.26.190'
     node3:
       ansible_host: 192.168.1.13
       ansible_user: cc
       ip: 192.168.1.13
       access_ip: 192.168.1.13
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyJump=cc@129.114.26.190'
   children:
     kube_control_plane:
       hosts:
