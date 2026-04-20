@@ -1,5 +1,4 @@
 apiVersion: v2
-name: gourmetgram-canary
+name: actual-budget-canary
 version: 1.0.0
-description: Gourmetgram Canary Deployment
-
+description: Actual Budget Canary Deployment

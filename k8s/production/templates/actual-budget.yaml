@@ -1,40 +1,36 @@
-# Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gourmetgram-app
-  namespace: gourmetgram-staging
-
+  name: actual-budget
+  namespace: actual-budget-production
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: gourmetgram-app
+      app: actual-budget
   template:
     metadata:
       labels:
-        app: gourmetgram-app
+        app: actual-budget
     spec:
       containers:
-        - name: gourmetgram-app
+        - name: actual-budget
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
-            - containerPort: 8000
+            - containerPort: 5006
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 ---
-# Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: gourmetgram-app
-  namespace: gourmetgram-staging
+  name: actual-budget
+  namespace: actual-budget-production
 spec:
   selector:
-    app: gourmetgram-app
+    app: actual-budget
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 8000
+      targetPort: 5006
   externalIPs:
     - {{ .Values.service.externalIP }}
-
