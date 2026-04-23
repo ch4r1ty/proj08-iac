@@ -47,8 +47,10 @@ The notebook prints the reserved flavor id/name for Terraform.
 From an environment with OpenStack credentials and Terraform:
 
 ```bash
-# Chameleon Jupyter exports OS_ACCESS_TOKEN; Terraform expects OS_TOKEN.
-source scripts/use-terraform-openstack-token.sh
+# Terraform requires a KVM@TACC application credential.
+bash scripts/configure-kvm-clouds-yaml.sh
+export OS_CLOUD=kvm
+unset OS_TOKEN OS_AUTH_TOKEN OS_ACCESS_TOKEN OS_AUTH_TYPE
 
 cd tf/kvm
 terraform init
