@@ -22,8 +22,9 @@ spec:
         fsGroup: 1001
       containers:
         - name: actual-budget
-          image: 10.233.51.71:5000/actual-sync:latest
-          imagePullPolicy: IfNotPresent
+          image: registry.kube-system.svc.cluster.local:5000/actual-sync:latest
+          # Always pull the demo image so rebuilding :latest actually refreshes pods.
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 5006

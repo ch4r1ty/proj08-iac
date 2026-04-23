@@ -2,3 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: gourmetgram-platform
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: proj08-platform
+    meta.helm.sh/release-namespace: gourmetgram-platform

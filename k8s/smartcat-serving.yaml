@@ -20,8 +20,9 @@ spec:
     spec:
       containers:
         - name: serve
-          image: 10.233.51.71:5000/actualbudget-serving:latest
-          imagePullPolicy: IfNotPresent
+          image: registry.kube-system.svc.cluster.local:5000/actualbudget-serving:latest
+          # Always pull the demo image so serving updates are not hidden by node caches.
+          imagePullPolicy: Always
           command: ["python", "-m", "app.launch"]
           ports:
             - containerPort: 8000

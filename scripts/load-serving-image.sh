@@ -1,28 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Load the built Actual Budget image tarball and publish it to the in-cluster
-# registry used by the Kubernetes manifests.
+# Load the SmartCat FastAPI serving image and publish it to the in-cluster
+# registry. The Kubernetes deployment pulls this image for /predict and
+# /predict_batch traffic from Actual Budget.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-IMAGE_TAR="${IMAGE_TAR:-${1:-}}"
+IMAGE_TAR="${SERVING_IMAGE_TAR:-${1:-${REPO_ROOT}/artifacts/docker/actualbudget-serving_latest-linux_amd64.tar.gz}}"
 REGISTRY_HOST="${REGISTRY_HOST:-registry.kube-system.svc.cluster.local:5000}"
-SOURCE_IMAGE="${SOURCE_IMAGE:-actual-smartcat/actual-sync:serving-latest}"
-TARGET_IMAGE="${TARGET_IMAGE:-${REGISTRY_HOST}/actual-sync:latest}"
-
-if [[ -z "${IMAGE_TAR}" ]]; then
-  # Prefer the newest commit-stamped tarball so deploys follow the latest build
-  # artifact without editing this script for every commit.
-  IMAGE_TAR="$(ls -t "${REPO_ROOT}"/artifacts/docker/actual-smartcat_actual-sync-serving-*-linux_amd64.tar.gz 2>/dev/null | head -n 1 || true)"
-fi
+SOURCE_IMAGE="${SERVING_SOURCE_IMAGE:-actualbudget-serving:latest}"
+TARGET_IMAGE="${SERVING_TARGET_IMAGE:-${REGISTRY_HOST}/actualbudget-serving:latest}"
 
 if [[ ! -f "${IMAGE_TAR}" ]]; then
   cat >&2 <<MSG
-Actual image tarball was not found:
-  ${IMAGE_TAR:-<none found under artifacts/docker>}
+SmartCat serving image tarball was not found:
+  ${IMAGE_TAR}
 
-Copy the tarball to node1, or set IMAGE_TAR=/path/to/file.tar.gz.
+Copy the tarball to node1, or set SERVING_IMAGE_TAR=/path/to/file.tar.gz.
 MSG
   exit 1
 fi
