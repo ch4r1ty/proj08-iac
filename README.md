@@ -57,6 +57,12 @@ terraform apply -var suffix=proj08 -var reservation=<reserved-flavor-id>
 terraform output
 ```
 
+If the Terraform provider cannot resolve the Chameleon KVM networking endpoint, use the OpenStack CLI fallback, which creates the same cluster resources from `clouds.yaml`:
+
+```bash
+bash scripts/provision-kvm-openstack.sh <reserved-flavor-id>
+```
+
 Use the `floating_ip_out` value as node1's public IP. The Terraform security group opens the browser/demo ports used by this project, including `30443`, `30083`, `30090`, `30300`, `30909`, `8000`, `9000`, and `9001`. Then render the inventory files:
 
 ```bash
