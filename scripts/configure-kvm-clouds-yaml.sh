@@ -8,7 +8,7 @@ set -euo pipefail
 CLOUD_NAME="${CLOUD_NAME:-kvm}"
 CLOUDS_FILE="${CLOUDS_FILE:-${HOME}/.config/openstack/clouds.yaml}"
 AUTH_URL="${AUTH_URL:-https://kvm.tacc.chameleoncloud.org:5000/v3}"
-REGION_NAME="${REGION_NAME:-regionOne}"
+REGION_NAME="${REGION_NAME:-KVM@TACC}"
 
 mkdir -p "$(dirname "${CLOUDS_FILE}")"
 

@@ -47,7 +47,7 @@ The notebook prints the reserved flavor id/name for Terraform.
 From an environment with OpenStack credentials and Terraform:
 
 ```bash
-# Terraform requires a KVM@TACC application credential. The generated clouds.yaml uses auth_url https://kvm.tacc.chameleoncloud.org:5000/v3 and region_name regionOne.
+# Terraform requires a KVM@TACC application credential. The generated clouds.yaml uses auth_url https://kvm.tacc.chameleoncloud.org:5000/v3 and region_name KVM@TACC.
 bash scripts/configure-kvm-clouds-yaml.sh
 source scripts/activate-kvm-cloud.sh
 
