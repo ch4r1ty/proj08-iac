@@ -58,7 +58,7 @@ ensure_networks() {
     run subnet create "${PRIVATE_SUBNET}" \
       --network "${PRIVATE_NET}" \
       --subnet-range "${CIDR}" \
-      --no-gateway >/dev/null
+      --gateway none >/dev/null
   fi
 }
 
