@@ -47,6 +47,9 @@ The notebook prints the reserved flavor id/name for Terraform.
 From an environment with OpenStack credentials and Terraform:
 
 ```bash
+# Chameleon Jupyter exports OS_ACCESS_TOKEN; Terraform expects OS_TOKEN.
+source scripts/use-terraform-openstack-token.sh
+
 cd tf/kvm
 terraform init
 terraform apply -var suffix=proj08 -var reservation=<reserved-flavor-id>
