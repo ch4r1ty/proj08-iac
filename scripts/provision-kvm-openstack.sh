@@ -99,8 +99,10 @@ ensure_server() {
 
   shared_port_id="$(ensure_port "${shared_port_name}" "${SHARED_NET}" --security-group "${SECURITY_GROUP}")"
   # Existing ports can come from a failed earlier run. Re-apply the public
-  # security group so browser/demo ports are open even on reruns.
-  run port set --security-group "${SECURITY_GROUP}" "${shared_port_id}" >/dev/null
+  # security group only if it is missing; Neutron rejects duplicate group ids.
+  if ! "${OS_CMD[@]}" port show "${shared_port_id}" -f value -c security_group_ids | grep -q "${SECURITY_GROUP}"; then
+    run port set --security-group "${SECURITY_GROUP}" "${shared_port_id}" >/dev/null
+  fi
 
   private_port_id="$(ensure_port "${private_port_name}" "${PRIVATE_NET}" --fixed-ip "subnet=${PRIVATE_SUBNET},ip-address=${private_ip}" --disable-port-security)"
 
