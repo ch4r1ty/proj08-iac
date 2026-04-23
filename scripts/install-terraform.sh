@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Install Terraform into ~/.local/bin for Chameleon Jupyter or any user account
-# where sudo/root access may not be available.
+# Install Terraform into ~/.local/bin for Chameleon Jupyter, Linux VMs, or a
+# developer laptop. The script auto-detects OS/CPU unless OS or ARCH is set.
 
 TERRAFORM_VERSION="${TERRAFORM_VERSION:-1.14.4}"
 INSTALL_DIR="${INSTALL_DIR:-${HOME}/.local/bin}"
-ARCH="${ARCH:-amd64}"
-OS="${OS:-linux}"
+
+raw_os="${OS:-$(uname -s | tr '[:upper:]' '[:lower:]')}"
+raw_arch="${ARCH:-$(uname -m)}"
+case "${raw_os}" in
+  linux|darwin) OS="${raw_os}" ;;
+  *) echo "Unsupported OS: ${raw_os}" >&2; exit 1 ;;
+esac
+case "${raw_arch}" in
+  x86_64|amd64) ARCH="amd64" ;;
+  arm64|aarch64) ARCH="arm64" ;;
+  *) echo "Unsupported architecture: ${raw_arch}" >&2; exit 1 ;;
+esac
+
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "${TMP_DIR}"' EXIT
 
