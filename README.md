@@ -40,34 +40,33 @@ Run `initalize_server.ipynb` in Chameleon Jupyter, or reserve manually:
 - Amount: `3`
 - Flavor: `m1.large`
 
-The notebook prints the reserved flavor id/name for Terraform.
+The notebook writes the reserved flavor id/name to `/work/proj08-iac/.proj08-reservation.env`. Chameleon exposes this reservation as a reserved OpenStack flavor, so the id is passed to `openstack server create --flavor`.
 
 ### 2. Provision the 3-node cluster
 
-From an environment with OpenStack credentials and Terraform:
+The current recommended path is the OpenStack CLI wrapper. This is the route that successfully created the April 2026 cluster after Terraform hit Chameleon KVM service-catalog issues.
 
 ```bash
-# Terraform requires a KVM@TACC application credential. The generated clouds.yaml uses auth_url https://kvm.tacc.chameleoncloud.org:5000/v3 and region_name KVM@TACC.
+# Run this once to create ~/.config/openstack/clouds.yaml with a KVM@TACC
+# application credential. The helper sets auth_url to the KVM Keystone v3
+# endpoint and region_name to KVM@TACC.
 bash scripts/configure-kvm-clouds-yaml.sh
-source scripts/activate-kvm-cloud.sh
 
-cd tf/kvm
-terraform init
-terraform apply -var suffix=proj08 -var reservation=<reserved-flavor-id>
-terraform output
+# Then create the private network, security group, three VMs, floating IP,
+# and Ansible/Kubespray inventory files.
+KEY_NAME=id_rsa_chameleon bash scripts/create-chameleon-kvm-cluster.sh <reserved-flavor-id>
 ```
 
-If the Terraform provider cannot resolve the Chameleon KVM networking endpoint, use the OpenStack CLI fallback, which creates the same cluster resources from `clouds.yaml`:
+The combined helper wraps these lower-level scripts:
 
-```bash
-bash scripts/provision-kvm-openstack.sh <reserved-flavor-id>
-```
+- `scripts/fix-kvm-cloud-region.sh`
+- `scripts/openstack-kvm.sh`
+- `scripts/provision-kvm-openstack.sh`
+- `scripts/render-ansible-inventory.sh`
 
-Use the `floating_ip_out` value as node1's public IP. The Terraform security group opens the browser/demo ports used by this project, including `30443`, `30083`, `30090`, `30300`, `30909`, `8000`, `9000`, and `9001`. Then render the inventory files:
+It writes the result to `artifacts/chameleon/latest-cluster.env` and prints the `floating_ip_out` value for node1. It opens the browser/demo ports used by this project, including `30443`, `30083`, `30090`, `30300`, `30909`, `8000`, `9000`, and `9001`.
 
-```bash
-bash scripts/render-ansible-inventory.sh <node1-floating-ip>
-```
+Terraform still exists under `tf/kvm/`, but use it only if the provider authentication and KVM service catalog are known to be working in your shell.
 
 ### 3. Bootstrap Kubernetes
 
@@ -83,23 +82,20 @@ The cluster kubeconfig should exist on node1 at `/etc/kubernetes/admin.conf`.
 
 ### 4. Load the Actual Budget image
 
-Copy the latest tarball to node1, then run from node1:
+Copy the latest Actual and SmartCat tarballs to node1, then run from node1:
 
 ```bash
-export IMAGE_TAR=/path/to/actual-smartcat_actual-sync-serving-0343bdfcf-stable-linux_amd64.tar.gz
+export IMAGE_TAR=/path/to/actual-smartcat_actual-sync-serving-<commit>-latest-linux_amd64.tar.gz
+export SERVING_IMAGE_TAR=/path/to/actualbudget-serving_latest-linux_amd64.tar.gz
 bash scripts/load-actual-image.sh
+bash scripts/load-serving-image.sh
 ```
 
-This tags and pushes:
+This tags and pushes to the in-cluster registry:
 
 ```text
-10.233.51.71:5000/actual-sync:latest
-```
-
-SmartCat serving expects this registry image to already exist:
-
-```text
-10.233.51.71:5000/actualbudget-serving:latest
+registry.kube-system.svc.cluster.local:5000/actual-sync:latest
+registry.kube-system.svc.cluster.local:5000/actualbudget-serving:latest
 ```
 
 ### 5. Deploy platform, monitoring, serving, and HTTPS
