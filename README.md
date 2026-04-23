@@ -138,6 +138,20 @@ http://<node1-floating-ip>:9001
 
 The HTTPS certificate is self-signed, so Chrome will show a warning. Accept it for the demo. Do not use `http://<node1-floating-ip>:30083` as the main Actual UI because Chrome will block `SharedArrayBuffer` over public HTTP.
 
+### 7. Import Grafana dashboards
+
+After Grafana is reachable, import the classroom/demo dashboards:
+
+```bash
+GRAFANA_URL=http://<node1-floating-ip>:30300 \
+GRAFANA_USER=admin \
+GRAFANA_PASSWORD=admin123 \
+PROMETHEUS_UID=prometheus \
+bash scripts/import-grafana-dashboards.sh
+```
+
+The helper imports Grafana dashboard IDs `1860`, `3119`, and `15760` for Node Exporter, Kubernetes cluster monitoring, and Kubernetes pod views. The provisioning notebook includes the same step as a runnable cell.
+
 ## DevOps Requirement Mapping
 
 | Requirement | Implementation |
