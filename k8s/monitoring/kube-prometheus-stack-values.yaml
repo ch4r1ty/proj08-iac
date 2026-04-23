@@ -1,0 +1,36 @@
+# Values for prometheus-community/kube-prometheus-stack.
+# Grafana and Prometheus are exposed as NodePorts so the demo can be opened
+# directly from a laptop after the Chameleon security groups are attached.
+grafana:
+  adminPassword: admin123
+  service:
+    type: NodePort
+    nodePort: 30300
+  defaultDashboardsEnabled: true
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace: ALL
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    retention: 7d
+    resources:
+      requests:
+        cpu: 300m
+        memory: 1Gi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+  service:
+    type: NodePort
+    nodePort: 30909
+alertmanager:
+  enabled: true
+  service:
+    type: ClusterIP
+nodeExporter:
+  enabled: true
+kubeStateMetrics:
+  enabled: true

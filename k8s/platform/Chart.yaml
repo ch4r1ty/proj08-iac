@@ -1,4 +1,4 @@
 apiVersion: v2
-name: gourmetgram-platform
+name: proj08-platform
 version: 1.0.0
-description: Gourmetgram Platform Services
+description: Shared MLflow, MinIO, and Postgres services for proj08 Smart Transaction Categorization

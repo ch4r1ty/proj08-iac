@@ -67,8 +67,10 @@ spec:
     - name: console
       port: 9001
       targetPort: 9001
+{{- if .Values.minio.externalIP }}
   externalIPs:
     - {{ .Values.minio.externalIP }}
+{{- end }}
 ---
 apiVersion: batch/v1
 kind: Job

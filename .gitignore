@@ -1,1 +1,4 @@
 tf/kvm/clouds.yaml
+
+# Local Docker image exports are too large for git; copy them to node1 when deploying.
+actual-smartcat_*.tar.gz

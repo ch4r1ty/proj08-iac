@@ -1,9 +1,11 @@
+# The deployment script sets these to node1's floating IP so MLflow and MinIO
+# are reachable from a laptop through Chameleon security groups.
 minio:
-  externalIP: "0.0.0.0"
+  externalIP: ""
 
 mlflow:
-  externalIP: "0.0.0.0"
+  externalIP: ""
 
 gateway:
-  externalIP: "0.0.0.0"
-
+  enabled: false
+  externalIP: ""

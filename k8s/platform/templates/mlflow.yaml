@@ -76,5 +76,7 @@ spec:
   ports:
     - port: 8000
       targetPort: 8000
+{{- if .Values.mlflow.externalIP }}
   externalIPs:
     - {{ .Values.mlflow.externalIP }}
+{{- end }}

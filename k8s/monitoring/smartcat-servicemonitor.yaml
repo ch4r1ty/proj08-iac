@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: smartcat-serving
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - smartcat
+  selector:
+    matchLabels:
+      app: smartcat-serving
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

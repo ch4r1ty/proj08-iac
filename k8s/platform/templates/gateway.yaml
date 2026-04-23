@@ -1,3 +1,4 @@
+{{- if .Values.gateway.enabled }}
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: GatewayClass
 metadata:
@@ -8,13 +9,13 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: gourmetgram-gateway-controller
+  name: proj08-gateway-controller
   namespace: gourmetgram-platform
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: gourmetgram-gateway-controller
+  name: proj08-gateway-controller
 rules:
 - apiGroups: [""]
   resources: ["services","endpoints","pods","nodes","secrets","namespaces"]
@@ -32,32 +33,32 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: gourmetgram-gateway-controller
+  name: proj08-gateway-controller
 subjects:
 - kind: ServiceAccount
-  name: gourmetgram-gateway-controller
+  name: proj08-gateway-controller
   namespace: gourmetgram-platform
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: gourmetgram-gateway-controller
+  name: proj08-gateway-controller
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gourmetgram-gateway-controller
+  name: proj08-gateway-controller
   namespace: gourmetgram-platform
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gourmetgram-gateway
+      app: proj08-gateway
   template:
     metadata:
       labels:
-        app: gourmetgram-gateway
+        app: proj08-gateway
     spec:
-      serviceAccountName: gourmetgram-gateway-controller
+      serviceAccountName: proj08-gateway-controller
       containers:
       - name: traefik
         image: traefik:v3.1
@@ -71,22 +72,24 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gourmetgram-gateway
+  name: proj08-gateway
   namespace: gourmetgram-platform
 spec:
   selector:
-    app: gourmetgram-gateway
+    app: proj08-gateway
   ports:
   - name: http
     port: 80
     targetPort: 8000
+{{- if .Values.gateway.externalIP }}
   externalIPs:
-  - {{ .Values.gateway.externalIP }}
+    - {{ .Values.gateway.externalIP }}
+{{- end }}
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-  name: gourmetgram-gateway
+  name: proj08-gateway
   namespace: gourmetgram-platform
 spec:
   gatewayClassName: traefik
@@ -97,4 +100,4 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
-
+{{- end }}

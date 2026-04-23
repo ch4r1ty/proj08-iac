@@ -62,11 +62,14 @@ kind: Service
 metadata:
   name: smartcat-serving
   namespace: smartcat
+  labels:
+    app: smartcat-serving
 spec:
   type: NodePort
   selector:
     app: smartcat-serving
   ports:
-    - port: 8000
+    - name: http
+      port: 8000
       targetPort: 8000
       nodePort: 30090
