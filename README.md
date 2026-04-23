@@ -49,8 +49,7 @@ From an environment with OpenStack credentials and Terraform:
 ```bash
 # Terraform requires a KVM@TACC application credential. The generated clouds.yaml uses auth_url https://kvm.tacc.chameleoncloud.org:5000/v3 and region_name regionOne.
 bash scripts/configure-kvm-clouds-yaml.sh
-export OS_CLOUD=kvm
-unset OS_TOKEN OS_AUTH_TOKEN OS_ACCESS_TOKEN OS_AUTH_TYPE
+source scripts/activate-kvm-cloud.sh
 
 cd tf/kvm
 terraform init

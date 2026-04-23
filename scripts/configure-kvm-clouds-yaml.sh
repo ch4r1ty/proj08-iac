@@ -44,8 +44,7 @@ YAML
 cat <<MSG
 Wrote ${CLOUDS_FILE}
 Now run:
-  export OS_CLOUD=${CLOUD_NAME}
-  unset OS_TOKEN OS_AUTH_TOKEN OS_ACCESS_TOKEN OS_AUTH_TYPE
+  source scripts/activate-kvm-cloud.sh
   cd /work/proj08-iac/tf/kvm
   terraform apply -var suffix=proj08 -var reservation=<reserved-flavor-id>
 MSG
