@@ -27,7 +27,7 @@ deadline, so the production-week cluster must be brought up fresh.
    Expected current application commit:
 
    ```text
-   339beb300 Preserve ML taxonomy in Actual suggestions
+   ffc335886 Normalize ML feedback category aliases
    ```
 
 2. Verify the DevOps repo is available on GitHub:
@@ -78,6 +78,14 @@ Use the existing detailed guide:
 
 ```text
 docs/chameleon-rebooking-runbook.md
+docs/chameleon-new-chat-handoff.md
+```
+
+Before creating resources, run:
+
+```bash
+cd /work/proj08-iac
+bash scripts/check-chameleon-rebooking-prereqs.sh
 ```
 
 The target shape is:

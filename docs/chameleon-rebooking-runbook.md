@@ -50,6 +50,17 @@ The successful path was not plain Terraform. The reliable flow was:
 4. Run `scripts/create-chameleon-kvm-cluster.sh`.
 5. Install Kubernetes with Kubespray, then deploy the stack.
 
+Before creating anything, run the non-destructive preflight:
+
+```bash
+cd /work/proj08-iac
+bash scripts/check-chameleon-rebooking-prereqs.sh
+```
+
+If the user starts a brand-new AI chat, paste the handoff in
+`docs/chameleon-new-chat-handoff.md` first. That file explains the credential
+model, the last working path, and the rehearsal flow with a separate suffix.
+
 In a Chameleon Jupyter notebook, run:
 
 ```python
@@ -171,7 +182,7 @@ ssh -i ~/.ssh/id_rsa_chameleon cc@"${FLOATING_IP}" \
 
 - `ansible/inventory.yml`
 - `ansible/k8s/inventory/mycluster/hosts.yaml`
+- `ansible/ansible.cfg` after it has been rendered with a one-off floating IP
 - `.venv-kubespray/`
 - `artifacts/`
 - Docker image tarballs
-
