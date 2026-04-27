@@ -10,7 +10,7 @@ GRAFANA_URL="${GRAFANA_URL:-${1:-http://129.114.26.122:30300}}"
 GRAFANA_USER="${GRAFANA_USER:-admin}"
 GRAFANA_PASSWORD="${GRAFANA_PASSWORD:-admin123}"
 PROMETHEUS_UID="${PROMETHEUS_UID:-prometheus}"
-DASHBOARD_IDS="${DASHBOARD_IDS:-1860 3119 15760}"
+DASHBOARD_IDS="${DASHBOARD_IDS-1860 3119 15760}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 LOCAL_DASHBOARD_DIR="${LOCAL_DASHBOARD_DIR:-${REPO_ROOT}/k8s/monitoring/grafana-dashboards}"
@@ -132,6 +132,9 @@ if local_dashboard_dir.exists():
             )
         except urllib.error.HTTPError as exc:
             error_body = exc.read().decode()
+            if exc.code == 400 and "Cannot save provisioned dashboard" in error_body:
+                print(f"Project dashboard {dashboard.get('title', dashboard_path.name)}: already provisioned by Grafana sidecar")
+                continue
             print(f"Project dashboard {dashboard_path.name} import failed: {exc.code} {error_body}", file=sys.stderr)
             raise
         print(f"Project dashboard {dashboard.get('title', dashboard_path.name)}: {result.get('status', 'ok')} {result.get('url', '')}")
