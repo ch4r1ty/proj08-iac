@@ -133,7 +133,7 @@ fi
 cat <<'MSG'
 
 This preflight does not reserve or create anything.
-For the full flow, use docs/chameleon-rebooking-runbook.md.
+For the full flow, use docs/chameleon-one-file-runbook.md.
 MSG
 
 exit "${status}"

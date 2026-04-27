@@ -28,9 +28,7 @@ Infrastructure and Kubernetes manifests for the proj08 integrated ML system. The
 | `scripts/` | One-command helpers for image loading, platform install, monitoring install, HTTPS setup, service checks, and security groups. |
 | `workflows/` | Existing Argo training/build/promote workflow templates. Some templates still contain legacy GourmetGram names and should be updated before relying on Argo for final automation. |
 | `initalize_server.ipynb` | Chameleon notebook for reserving the 3 `m1.large` nodes and opening browser demo security groups. |
-| `docs/chameleon-new-chat-handoff.md` | Copy-paste handoff for a fresh AI chat to rebook Chameleon and recover the production stack. |
-| `docs/chameleon-rebooking-runbook.md` | Detailed Chameleon rebooking and recovery procedure. |
-| `docs/production-week-launch-plan.md` | Fresh production-week launch, recording, links, and smoke-test checklist. |
+| `docs/chameleon-one-file-runbook.md` | Single canonical handoff for fresh AI chats, Chameleon rebooking, production-week launch, recording, links, and troubleshooting. |
 
 ## Fresh Cluster Deployment
 
@@ -51,9 +49,8 @@ Before creating resources, run the non-destructive preflight:
 bash scripts/check-chameleon-rebooking-prereqs.sh
 ```
 
-For a fresh AI chat or tomorrow's recording, start with
-`docs/chameleon-new-chat-handoff.md` and then follow
-`docs/production-week-launch-plan.md`.
+For a fresh AI chat or tomorrow's recording, use the single consolidated guide:
+`docs/chameleon-one-file-runbook.md`.
 
 ### 2. Provision the 3-node cluster
 
