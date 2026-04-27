@@ -42,7 +42,7 @@ spec:
             - name: SERVICE_PORT
               value: "8000"
             - name: WEB_CONCURRENCY
-              value: "2"
+              value: "1"
             - name: RUNTIME_DIR
               value: "/workspace/runtime"
           readinessProbe:
@@ -57,6 +57,13 @@ spec:
               port: 8000
             initialDelaySeconds: 10
             periodSeconds: 10
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 1Gi
 ---
 apiVersion: v1
 kind: Service

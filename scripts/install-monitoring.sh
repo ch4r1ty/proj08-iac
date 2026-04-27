@@ -34,5 +34,15 @@ helm "${helm_args[@]}" upgrade --install monitoring prometheus-community/kube-pr
 
 kubectl "${kubectl_args[@]}" apply -f "${REPO_ROOT}/k8s/monitoring/smartcat-servicemonitor.yaml"
 kubectl "${kubectl_args[@]}" apply -f "${REPO_ROOT}/k8s/monitoring/alert-rules.yaml"
+kubectl "${kubectl_args[@]}" apply -f "${REPO_ROOT}/k8s/monitoring/smartcat-prometheus-rules.yaml"
+
+kubectl "${kubectl_args[@]}" -n monitoring create configmap smartcat-grafana-dashboards \
+  --from-file="${REPO_ROOT}/k8s/monitoring/grafana-dashboards" \
+  --dry-run=client \
+  -o yaml | kubectl "${kubectl_args[@]}" apply -f -
+kubectl "${kubectl_args[@]}" -n monitoring label configmap smartcat-grafana-dashboards \
+  grafana_dashboard=1 \
+  app.kubernetes.io/part-of=smartcat \
+  --overwrite
 
 echo "Monitoring installed: Grafana NodePort 30300, Prometheus NodePort 30909."
