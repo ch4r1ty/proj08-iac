@@ -1,9 +1,45 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FLOATING_IP="${FLOATING_IP:-${1:-}}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat >&2 <<'EOF'
+Usage: scripts/check-public-services.sh <floating-ip> [--open]
+
+Checks public demo services. Add --open, or set OPEN_DEMO_PAGES=1, to open the
+Actual app, SmartCat API docs, and project Grafana dashboards in the local
+browser after the checks finish.
+EOF
+}
+
+FLOATING_IP="${FLOATING_IP:-}"
+OPEN_DEMO_PAGES="${OPEN_DEMO_PAGES:-0}"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --open)
+      OPEN_DEMO_PAGES=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      if [[ -z "${FLOATING_IP}" ]]; then
+        FLOATING_IP="$1"
+      else
+        echo "Unexpected argument: $1" >&2
+        usage
+        exit 1
+      fi
+      ;;
+  esac
+  shift
+done
+
 if [[ -z "${FLOATING_IP}" ]]; then
-  echo "Usage: $0 <floating-ip>" >&2
+  usage
   exit 1
 fi
 
@@ -25,3 +61,7 @@ check "Grafana" "http://${FLOATING_IP}:30300/login"
 check "Prometheus" "http://${FLOATING_IP}:30909/-/ready"
 check "MLflow" "http://${FLOATING_IP}:8000"
 check "MinIO console" "http://${FLOATING_IP}:9001"
+
+if [[ "${OPEN_DEMO_PAGES}" == "1" || "${OPEN_DEMO_PAGES}" == "true" ]]; then
+  "${SCRIPT_DIR}/open-demo-pages.sh" "${FLOATING_IP}" || true
+fi

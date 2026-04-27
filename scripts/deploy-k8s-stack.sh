@@ -36,3 +36,9 @@ fi
 "${SCRIPT_DIR}/install-monitoring.sh"
 "${SCRIPT_DIR}/setup-actual-https.sh" "${FLOATING_IP}"
 "${SCRIPT_DIR}/check-public-services.sh" "${FLOATING_IP}" || true
+
+if [[ "${OPEN_DEMO_PAGES:-0}" == "1" || "${OPEN_DEMO_PAGES:-}" == "true" ]]; then
+  "${SCRIPT_DIR}/open-demo-pages.sh" "${FLOATING_IP}" || true
+else
+  echo "Tip: run OPEN_DEMO_PAGES=1 ${SCRIPT_DIR}/check-public-services.sh ${FLOATING_IP} to open the demo app, API docs, and Grafana dashboards."
+fi
